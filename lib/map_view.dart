@@ -18,7 +18,7 @@ Place nave = new Place(
   LatLng(33.771261, -84.391391),
   [new Food(
     "Eggs",
-    7.8,
+    3.8,
     "\$15",
     [],
     null,

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'place_data.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:sprintf/sprintf.dart';
 
 class PlaceView extends StatefulWidget {
   final Place _place;
@@ -12,8 +14,19 @@ class PlaceView extends StatefulWidget {
 
 class PlaceViewState extends State<PlaceView> {
   Place _place;
+  String upvoteValue = '';
 
   PlaceViewState(this._place);
+
+  @override
+  void initState() {
+    upvoteValue = _place.upvotes.toString();
+    super.initState();
+  }
+
+  String timeUntilExpiration() {
+    return(_place.expiration.difference(DateTime.now()).inHours.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,36 +42,197 @@ class PlaceViewState extends State<PlaceView> {
           )
         ],
       ),
-      body:  new ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: _place.menu.length,
-          itemBuilder: (BuildContext context, int i) {
-            return Column(
-              children: <Widget>[
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(_place.menu[i].name),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Flex(
+              direction: Axis.vertical,
+              children: [
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Card(
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(15),
+                                child: Text('Food',
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold)),
+                              )
+                            ],
+                          )),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: Text('Rating',
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold)),
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(15),
+                                child: Text('Price',
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold)),
+                              )
+                            ],
+                          )),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(_place.menu[i].rating.toString()),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(_place.menu[i].cost),
-                      ),
-                    ],
-                  )
-                )
+                    ))
               ],
-            );
-          }
+            ),
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: _place.menu.length,
+                    itemBuilder: (BuildContext context, int i) {
+                      return Card(
+                          child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(_place.menu[i].name,
+                                      style: TextStyle(fontSize: 25))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(_place.menu[i].rating.toString() + "/5",
+                                      style: TextStyle(fontSize: 25))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(_place.menu[i].cost,
+                                      style: TextStyle(fontSize: 25))
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ));
+                    }),
+              ),
+            ),
+            Flex(
+              direction: Axis.vertical,
+              children: [
+                Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.arrow_upward),
+                                        onPressed: () {
+                                          _place.upvotes++;
+                                          setState(() {
+                                            upvoteValue = _place.upvotes.toString();
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Text(upvoteValue, style: TextStyle(fontSize: 20)),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.arrow_downward),
+                                        onPressed: () {
+                                          _place.upvotes--;
+                                          setState(() {
+                                            upvoteValue = _place.upvotes.toString();
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(timeUntilExpiration() + 'h left', style: TextStyle(fontSize: 20)),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: IconButton(
+                                icon: Icon(Icons.map),
+                                onPressed: () {
+                                  _launchURL(sprintf("http://maps.google.com/?q=%s,%s", [_place.location.latitude.toString(), _place.location.longitude.toString()]));
+                                }
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
+
+  _launchURL(String u) async {
+    String url = u;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 }
