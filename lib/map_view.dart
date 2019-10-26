@@ -21,11 +21,13 @@ Place nave = new Place(
     7.8,
     "\$15",
     [],
+    null,
     null
   )],
   25,
   null,
-  "a01"
+  "a01",
+  null
 );
 
 class MapViewState extends State<MapView> {
