@@ -17,10 +17,10 @@ class Place {
 
 }
 
-class Food<T extends String, double> {
+class Food {
   String name;
   double rating;
-  List<T> cost;
+  String cost;
   List<String> dietaryRestrictions;
   DocumentReference creator;
 

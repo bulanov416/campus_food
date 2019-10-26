@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,10 +11,27 @@ class MapView extends StatefulWidget {
   MapViewState createState() => MapViewState();
 }
 
+Place nave = new Place(
+  "North Ave",
+  "Dining Hall",
+  new DateTime(2019, 10, 27),
+  LatLng(33.771261, -84.391391),
+  [new Food(
+    "Eggs",
+    7.8,
+    "\$15",
+    [],
+    null
+  )],
+  25,
+  null,
+  "a01"
+);
+
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   double zoomVal = 5.0;
-  List<Place> places = [];
+  List<Place> places = [nave];
   List<Marker> allMarkers = [];
 
   @override
