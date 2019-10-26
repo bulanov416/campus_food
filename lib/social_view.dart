@@ -1,5 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-Widget socialView(BuildContext context) {
-  return Text('SocialView');
+class SocialView extends StatefulWidget {
+  @override
+  SocialViewState createState() => SocialViewState();
+}
+
+class SocialViewState extends State<SocialView> {
+  @override
+  Widget build(BuildContext context) {
+    return Text('SocialView');
+  }
 }

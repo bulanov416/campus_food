@@ -1,5 +1,13 @@
 import 'package:flutter/cupertino.dart';
 
-Widget trendingView(BuildContext context) {
-  return Text('TrendingView');
+class TrendingView extends StatefulWidget {
+  @override
+  TrendingViewState createState() => TrendingViewState();
+}
+
+class TrendingViewState extends State<TrendingView> {
+  @override
+  Widget build(BuildContext context) {
+    return Text('TrendingView');
+  }
 }

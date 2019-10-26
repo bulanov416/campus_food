@@ -19,10 +19,10 @@ class _FrameState extends State<Frame> {
   @override
   Widget build(BuildContext context) {
     final _tabs = [
-      mapView(context),
-      trendingView(context),
-      socialView(context),
-      settingsView(context),
+      MapView(),
+      TrendingView(),
+      SocialView(),
+      SettingsView(),
     ];
 
     return Scaffold(
@@ -37,7 +37,12 @@ class _FrameState extends State<Frame> {
           iconSize: 21,
           icon: Icon(Icons.map),
         ),*/
-        title: Text('Campus Eats', textAlign: TextAlign.center, textDirection: TextDirection.ltr,),
+        title: Text(
+          'Campus Eats',
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+          style: TextStyle(fontFamily: 'OpenSans'),
+        ),
         // Commented out are the buttons to the right of the title
         /*actions: <Widget>[
           IconButton(
@@ -87,5 +92,4 @@ class _FrameState extends State<Frame> {
       _selectedIndex = index;
     });
   }
-
 }
