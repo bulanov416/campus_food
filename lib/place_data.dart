@@ -1,6 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class PlaceData {
+class Place {
   String type;
   DateTime expiration;
   LatLng location;
