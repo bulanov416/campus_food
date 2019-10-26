@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'place_data.dart';
+import 'place_view.dart';
 
 class MapView extends StatefulWidget {
   @override
@@ -12,26 +13,32 @@ class MapView extends StatefulWidget {
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   double zoomVal = 5.0;
+  List<Place> places = [];
   List<Marker> allMarkers = [];
 
   @override
   void initState() {
     super.initState();
-    allMarkers.add(Marker(
-      markerId: MarkerId('bernardin'),
-      position: LatLng(33.777281, -84.398600),
-      infoWindow: InfoWindow(
-          title: 'Le Bernardin',
-          snippet: 'Test of the snippet'),
-      icon: BitmapDescriptor.defaultMarkerWithHue(
-        BitmapDescriptor.hueViolet,
-      ),
-      onTap: () {
-        print(this.allMarkers[0].markerId);
-      }
 
-    ));
-    print(allMarkers);
+    for (int i = 0; i < places.length; i++) {
+      allMarkers.add(Marker(
+          markerId: MarkerId(places[i].id),
+          position: places[i].location,
+          infoWindow: InfoWindow(
+            title: places[i].name,
+            snippet: places[i].type,
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => (PlaceView(places[i])),
+                )
+            );
+          }
+      ));
+    }
   }
 
   @override
