@@ -10,7 +10,7 @@ class MapView extends StatefulWidget {
 
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
-  double zoomVal = 5.0;
+  double zoomVal = 1.0;
   List<Marker> allMarkers = [];
 
   @override
@@ -19,10 +19,16 @@ class MapViewState extends State<MapView> {
     allMarkers.add(Marker(
       markerId: MarkerId('bernardin'),
       position: LatLng(40.761421, -73.981667),
-      infoWindow: InfoWindow(title: 'Le Bernardin'),
+      infoWindow: InfoWindow(
+          title: 'Le Bernardin',
+          snippet: 'Test of the snippet'),
       icon: BitmapDescriptor.defaultMarkerWithHue(
         BitmapDescriptor.hueViolet,
       ),
+      onTap: () {
+        print('stuff');
+      }
+
     ));
     print(allMarkers);
   }
