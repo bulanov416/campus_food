@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>48095990968-kptp7ll93juagagsru8ibdche1tfah0m.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.48095990968-kptp7ll93juagagsru8ibdche1tfah0m</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDCBQqngr40oJTnUqDSkOruwfGzsfkBAXE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>48095990968</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.hackgtsquad.campusFood</string>
+	<key>PROJECT_ID</key>
+	<string>campusfood-8aef2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>campusfood-8aef2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:48095990968:ios:9efa66c8749ec84061104d</string>
+	<key>DATABASE_URL</key>
+	<string>https://campusfood-8aef2.firebaseio.com</string>
+</dict>
+</plist>
