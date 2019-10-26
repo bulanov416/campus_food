@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "48095990968",
+    "firebase_url": "https://campusfood-8aef2.firebaseio.com",
+    "project_id": "campusfood-8aef2",
+    "storage_bucket": "campusfood-8aef2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48095990968:android:3be1bf7cf8f0653a61104d",
+        "android_client_info": {
+          "package_name": "com.hackgtsquad.campus_food"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48095990968-b8flbro6gbmbgv2tn4ft616srcrhlpec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSORxMZM6vmIpVS0UpRLv9Gxsj8dtC4RA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48095990968-b8flbro6gbmbgv2tn4ft616srcrhlpec.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "48095990968-kptp7ll93juagagsru8ibdche1tfah0m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hackgtsquad.campusFood"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
