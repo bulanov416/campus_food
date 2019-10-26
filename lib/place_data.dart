@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -31,6 +32,10 @@ class Place {
   Place.fromSnapshot(DocumentSnapshot snapshot) :
     this.fromMap(snapshot.data, reference: snapshot.reference);
 
+
+  Place(this.name, this.type, this.expiration, this.location, this.menu,
+      this.upvotes, this.creator, this.id, this.reference);
+
 }
 
 class Food {
@@ -39,6 +44,7 @@ class Food {
   String cost;
   List<String> dietaryRestrictions;
   DocumentReference creator;
+
   final DocumentReference reference;
 
   Food.fromMap(Map<String, dynamic> map, {this.reference})
@@ -55,4 +61,9 @@ class Food {
 
   Food.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+
+  Food(this.name, this.rating, this.cost, this.dietaryRestrictions,
+      this.creator, this.reference);
+
 }
