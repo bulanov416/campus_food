@@ -10,7 +10,7 @@ class MapView extends StatefulWidget {
 
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
-  double zoomVal = 1.0;
+  double zoomVal = 5.0;
   List<Marker> allMarkers = [];
 
   @override
@@ -18,7 +18,7 @@ class MapViewState extends State<MapView> {
     super.initState();
     allMarkers.add(Marker(
       markerId: MarkerId('bernardin'),
-      position: LatLng(40.761421, -73.981667),
+      position: LatLng(33.777281, -84.398600),
       infoWindow: InfoWindow(
           title: 'Le Bernardin',
           snippet: 'Test of the snippet'),
@@ -26,7 +26,7 @@ class MapViewState extends State<MapView> {
         BitmapDescriptor.hueViolet,
       ),
       onTap: () {
-        print('stuff');
+        print(this.allMarkers[0].markerId);
       }
 
     ));
@@ -41,7 +41,6 @@ class MapViewState extends State<MapView> {
           _buildGoogleMap(context),
           _zoomminusfunction(),
           _zoomplusfunction(),
-          _buildContainer(),
         ],
       ),
     );
@@ -74,79 +73,11 @@ class MapViewState extends State<MapView> {
 
   Future<void> _minus(double zoomVal) async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(40.712776, -74.005974), zoom: zoomVal)));
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(33.777281, -84.398600), zoom: zoomVal)));
   }
   Future<void> _plus(double zoomVal) async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(40.712776, -74.005974), zoom: zoomVal)));
-  }
-
-  Widget _buildContainer() {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        height: 150,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            SizedBox(width: 10),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _boxes(
-                  "https://lh5.googleusercontent.com/p/AF1QipO3VPL9m-b355xWeg4MXmOQTauFAEkavSluTtJU=w225-h160-k-no",
-                  40.738380, -73.988426,"Gramercy Tavern"),
-            ),
-            SizedBox(width: 10.0),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _boxes(
-                  "https://lh5.googleusercontent.com/p/AF1QipMKRN-1zTYMUVPrH-CcKzfTo6Nai7wdL7D8PMkt=w340-h160-k-no",
-                  40.761421, -73.981667,"Le Bernardin"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _boxes(String _image, double lat,double long,String restaurantName) {
-    return GestureDetector(
-      onTap: () {
-        _gotoLocation(lat, long);
-      },
-      child: Container(
-        child: new FittedBox(
-          child: Material(
-              color: Colors.white,
-              elevation: 14.0,
-              borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Color(0x802196F3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    width: 180,
-                    height: 200,
-                    child: ClipRRect(
-                      borderRadius: new BorderRadius.circular(24.0),
-                      child: Image(
-                        fit: BoxFit.fill,
-                        image: NetworkImage(_image),
-                      ),
-                    ),),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: myDetailsContainer1(restaurantName),
-                    ),
-                  ),
-
-                ],)
-          ),
-        ),
-      ),
-    );
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(33.777281, -84.398600), zoom: zoomVal)));
   }
 
   Widget myDetailsContainer1(String restaurantName) {
@@ -249,11 +180,13 @@ class MapViewState extends State<MapView> {
       width: MediaQuery.of(context).size.width,
       child: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition:  CameraPosition(target: LatLng(40.712776, -74.005974), zoom: 12),
+        initialCameraPosition:  CameraPosition(target: LatLng(33.776817, -84.398879), zoom: 12),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+
         markers: Set.from(allMarkers),
+        zoomGesturesEnabled: true,
       ),
     );
   }
