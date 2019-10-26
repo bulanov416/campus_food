@@ -5,10 +5,6 @@
     <key>io.flutter.embedded_views_preview</key>
     <true/>
 	<key>CFBundleDevelopmentRegion</key>
-	<key>NSLocationAlwaysUsageDescription</key>
-    <string>Needed to access location</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Needed to access location</string>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
