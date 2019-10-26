@@ -18,12 +18,12 @@ Place nave = new Place(
   LatLng(33.771261, -84.391391),
   [new Food(
     "Eggs",
-    7.8,
+    3.8,
     "\$15",
     [],
     null,
     null
-  )],
+  )], 
   25,
   null,
   "a01",
@@ -33,32 +33,57 @@ Place nave = new Place(
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   double zoomVal = 5.0;
-  List<Place> places = [nave];
+  Map<String, Place> places = {};
   List<Marker> allMarkers = [];
+  List<String> addedDiningOptions = [];
+
+  void generateMarker(id, place) {
+    allMarkers.add(Marker(
+        markerId: MarkerId(place.id),
+        position: place.location,
+        infoWindow: InfoWindow(
+          title: place.name,
+          snippet: place.type,
+        ),
+        icon: BitmapDescriptor.defaultMarker,
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => (PlaceView(place)),
+              )
+          );
+        }
+    ));
+  }
+
+  void generateMarkers() {
+    print(places);
+    allMarkers = [];
+    places.forEach(generateMarker);
+  }
+
+  void addPlaceToList(DocumentSnapshot doc) {
+    print(doc.documentID);
+    print(doc["menu"]);
+    places[doc.documentID] = Place.fromSnapshot(doc);
+  }
+
+  void onReadDiningOptions(QuerySnapshot data) {
+    data.documents.forEach(addPlaceToList);
+
+    generateMarkers();
+  }
 
   @override
   void initState() {
     super.initState();
 
-    for (int i = 0; i < places.length; i++) {
-      allMarkers.add(Marker(
-          markerId: MarkerId(places[i].id),
-          position: places[i].location,
-          infoWindow: InfoWindow(
-            title: places[i].name,
-            snippet: places[i].type,
-          ),
-          icon: BitmapDescriptor.defaultMarker,
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => (PlaceView(places[i])),
-                )
-            );
-          }
-      ));
-    }
+    Firestore.instance
+        .collection('places')
+        .where("timeToExpire", isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .snapshots()
+        .listen(onReadDiningOptions);
   }
 
   @override
