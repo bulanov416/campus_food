@@ -232,7 +232,7 @@ class PlaceViewState extends State<PlaceView> {
         }
         return Expanded(
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(11),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Row(
