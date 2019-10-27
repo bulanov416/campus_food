@@ -39,7 +39,7 @@ class PlaceViewState extends State<PlaceView> {
     return new StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection("places").document(_place.id).collection("menu").snapshots(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) {
+          if (!snapshot.hasData) {
             return Text("Loading Data");
           }
           return Scaffold(
@@ -255,12 +255,12 @@ class PlaceViewState extends State<PlaceView> {
                         color: netVote > 0 ? Colors.red : null,
                         onPressed: () {
                           print(Auth.user);
-                          if(Auth.user == null) {
+                          if (Auth.user == null) {
                             Auth.refreshFirebaseUser();
                             Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
                           } else {
                             int change = 0;
-                            if(netVote > 0) { // Old vote was for, now taking it away
+                            if (netVote > 0) { // Old vote was for, now taking it away
                               change = -1;
                               snapshot.data.reference.updateData({'upvoters':FieldValue.arrayRemove([Auth.user.uid])});
                             } else if (netVote < 0){ // Old vote was against, now swinging it
@@ -295,7 +295,7 @@ class PlaceViewState extends State<PlaceView> {
                             Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
                           } else {
                             int change = 0;
-                            if(netVote < 0) { // Old vote was against, now taking it away
+                            if (netVote < 0) { // Old vote was against, now taking it away
                               change = 1;
                               snapshot.data.reference.updateData({'downvoters':FieldValue.arrayRemove([Auth.user.uid])});
                             } else if (netVote > 0){ // Old vote was for, now swinging it

@@ -17,7 +17,9 @@ class TrendingViewState extends State<TrendingView> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('places').orderBy("upvotes", descending: true).snapshots(),
+      stream: Firestore.instance.collection('places')
+          .orderBy("upvotes", descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
 
@@ -35,7 +37,10 @@ class TrendingViewState extends State<TrendingView> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final place = Place.fromSnapshot(data);
-
+    // TODO FIX HANDLING EXPIRED OPTIONS - THIS IS A TERRIBLE WAY TO DO IT
+    if(data["timeToExpire"] < DateTime.now().millisecondsSinceEpoch) {
+      return new Container(width:0, height: 0);
+    }
     return Padding(
       key: ValueKey(place.name),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
