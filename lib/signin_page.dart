@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import './auth.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -34,8 +35,9 @@ class SignInPageState extends State<SignInPage> {
                 }
                 _signOut();
                 final String uid = user.uid;
+                Auth.refreshFirebaseUser();
                 Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid + ' has successfully signed out.'),
+                  content: Text(user.email + ' has successfully signed out.'),
                 ));
               },
             );
@@ -149,6 +151,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       setState(() {
         _success = true;
         _userEmail = user.email;
+        Auth.refreshFirebaseUser();
       });
     } else {
       _success = false;

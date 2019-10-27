@@ -10,10 +10,10 @@ class Frame extends StatefulWidget {
   Frame({Key key, this.pageTitle}) : super(key: key);
 
   @override
-  _FrameState createState() => _FrameState();
+  FrameState createState() => FrameState();
 }
 
-class _FrameState extends State<Frame> {
+class FrameState extends State<Frame> {
   int _selectedIndex = 0;
 
   @override

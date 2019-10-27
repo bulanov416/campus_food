@@ -1,5 +1,6 @@
 import 'package:campus_food/frame.dart';
 import 'package:flutter/material.dart';
+import './auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,6 +8,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Auth.refreshFirebaseUser();
     return MaterialApp(
       title: 'Food Friend',
       theme: ThemeData(
@@ -14,8 +16,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         scaffoldBackgroundColor: const Color(0xFFffffff)
       ),
-      home: Frame(
-        pageTitle: 'Campus Eats?'),
+      home: Frame(pageTitle: 'Food Friend',),
     );
   }
 }

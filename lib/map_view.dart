@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:campus_food/new_pin_creator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,44 +29,6 @@ class MapViewState extends State<MapView> {
   Map<String, Place> places = {};
   List<Marker> allMarkers = [];
   List<String> addedDiningOptions = [];
-//
-//  void generateMarker(id, place) {
-//    allMarkers.add(Marker(
-//        markerId: MarkerId(place.id),
-//        position: place.location,
-//        infoWindow: InfoWindow(
-//          title: place.name,
-//          snippet: place.type,
-//        ),
-//        icon: BitmapDescriptor.defaultMarker,
-//        onTap: () {
-//          Navigator.push(
-//              context,
-//              MaterialPageRoute(
-//                builder: (context) => (PlaceView(place)),
-//              )
-//          );
-//        }
-//    ));
-//  }
-//
-//  void generateMarkers() {
-//    allMarkers = [];
-//    places.forEach(generateMarker);
-//  }
-//
-//  void addPlaceToList(DocumentSnapshot doc) {
-//    places[doc.documentID] = Place.fromSnapshot(doc);
-//    doc.reference.collection("menu").snapshots()
-//        .listen((data) => data.documents.forEach((doc2) =>
-//        print(doc2["name"])));
-//  }
-//
-//  void onReadDiningOptions(QuerySnapshot data) {
-//    data.documents.forEach(addPlaceToList);
-//
-//    generateMarkers();
-//  }
 
   @override
   void initState() {
@@ -242,9 +205,15 @@ class MapViewState extends State<MapView> {
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
           },
-
           markers: Set.from(_buildMarkers(context, snapshot.data.documents)),
           zoomGesturesEnabled: true,
+          onLongPress: (latlng) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => (NewPinCreatorState(latlng).build(context)))
+            );
+          },
         );
       }
     );

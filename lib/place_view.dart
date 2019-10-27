@@ -4,9 +4,12 @@ import 'place_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'food_or_friends_creator.dart';
+import './auth.dart';
 
 class PlaceView extends StatefulWidget {
   final Place _place;
+
 
   PlaceView(this._place);
 
@@ -15,13 +18,12 @@ class PlaceView extends StatefulWidget {
 
 class PlaceViewState extends State<PlaceView> {
   Place _place;
-  String upvoteValue = '';
+  int netVote = 0;
 
   PlaceViewState(this._place);
 
   @override
   void initState() {
-    upvoteValue = _place.upvotes.toString();
     super.initState();
   }
 
@@ -45,7 +47,11 @@ class PlaceViewState extends State<PlaceView> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    // TO-DO: Implement add food feature
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => (FoodOrFriendsCreatorState(_place).build(context)))
+                    );
                   },
                 )
               ],
@@ -119,52 +125,7 @@ class PlaceViewState extends State<PlaceView> {
                           alignment: Alignment.bottomCenter,
                           child: Row(
                             children: <Widget>[
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Column(
-                                          children: <Widget>[
-                                            IconButton(
-                                              icon: Icon(Icons.arrow_upward),
-                                              onPressed: () {
-                                                _place.upvotes++;
-                                                setState(() {
-                                                  upvoteValue =
-                                                      _place.upvotes.toString();
-                                                });
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                        Column(
-                                          children: <Widget>[
-                                            Text(upvoteValue,
-                                                style: TextStyle(fontSize: 20)),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: <Widget>[
-                                            IconButton(
-                                              icon: Icon(Icons.arrow_downward),
-                                              onPressed: () {
-                                                _place.upvotes--;
-                                                setState(() {
-                                                  upvoteValue =
-                                                      _place.upvotes.toString();
-                                                });
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              _buildUpvote(),
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.all(20),
@@ -231,7 +192,7 @@ class PlaceViewState extends State<PlaceView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(food.rating.toString() + "/5",
+                    Text(food.rating.toString() + "/5.0",
                         style: TextStyle(fontSize: 25))
                   ],
                 ),
@@ -248,6 +209,106 @@ class PlaceViewState extends State<PlaceView> {
             ],
           ),
         ));
+  }
+
+  Widget _buildUpvote() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: Firestore.instance.collection('places').document(_place.id).snapshots(),
+      builder: (context, snapshot) {
+        if(!snapshot.hasData) {
+          return Text("Rating Unavailable");
+        }
+        if(Auth.user != null) {
+          if(snapshot.data["upvoters"].contains(Auth.user.uid)) {
+            netVote = 1;
+          } else if(snapshot.data["downvoters"].contains(Auth.user.uid)) {
+            netVote = -1;
+          } else {
+            netVote = 0;
+          }
+        } else {
+          Auth.refreshFirebaseUser();
+          netVote = 0;
+        }
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_upward),
+                        color: netVote > 0 ? Colors.red : null,
+                        onPressed: () {
+                          print(Auth.user);
+                          if(Auth.user == null) {
+                            Auth.refreshFirebaseUser();
+                            Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
+                          } else {
+                            int change = 0;
+                            if(netVote > 0) { // Old vote was for, now taking it away
+                              change = -1;
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                            } else if (netVote < 0){ // Old vote was against, now swinging it
+                              change = 2;
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            } else { // Old vote was neutral, now adding it
+                              change = 1;
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            }
+                            snapshot.data.reference.updateData(
+                                {'upvotes': FieldValue.increment(change)});
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text(snapshot.data["upvotes"].toString(),
+                          style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.arrow_downward),
+                        color: netVote < 0 ? Colors.red : null,
+                        onPressed: () {
+                          if(Auth.user == null) {
+                            Auth.refreshFirebaseUser();
+                            Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
+                          } else {
+                            int change = 0;
+                            if(netVote < 0) { // Old vote was against, now taking it away
+                              change = 1;
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                            } else if (netVote > 0){ // Old vote was for, now swinging it
+                              change = -2;
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            } else { // Old vote was neutral, now reducing it
+                              change = -1;
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            }
+                            snapshot.data.reference.updateData(
+                                {'upvotes': FieldValue.increment(change)});
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    );
   }
 
   _launchURL(String u) async {
