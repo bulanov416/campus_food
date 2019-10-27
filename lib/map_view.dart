@@ -211,7 +211,7 @@ class MapViewState extends State<MapView> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                builder: (context) => (NewPinCreatorState(latlng).build(context)))
+                builder: (context) => (NewPinCreator(latlng)))
             );
           },
         );

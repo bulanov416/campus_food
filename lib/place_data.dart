@@ -65,3 +65,13 @@ class Food {
       this.creator, this.reference);
 
 }
+
+class Meetup {
+  String name;
+  DateTime dateTime;
+  List<String> members;
+  String location;
+
+  Meetup(this.name, this.dateTime, this.members, this.location);
+
+}

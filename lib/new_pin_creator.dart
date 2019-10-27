@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'frame.dart';
+import 'place_data.dart';
 
 class NewPinCreator extends StatefulWidget {
   LatLng location;
@@ -14,10 +15,20 @@ class NewPinCreator extends StatefulWidget {
 }
 
 class NewPinCreatorState extends State<NewPinCreator> {
-  NewType type;
-  String name;
+  static String name;
   LatLng location;
   List<bool> isSelectedToggleButton = [false, false];
+
+  Place newPlace = new Place(
+    name,
+    'Pin',
+    null,
+    null,
+    0,
+    null,
+    null,
+    null
+  );
 
   NewPinCreatorState(this.location);
 
@@ -70,6 +81,8 @@ class NewPinCreatorState extends State<NewPinCreator> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         onPressed: () {
+          // UPLOAD newPlace OBJECT TO DATABASE
+          // DONT FORGET TO TAKE DATA FROM location AND UPLOAD TO DATABASE WITH OBJECT
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -80,5 +93,3 @@ class NewPinCreatorState extends State<NewPinCreator> {
     );
   }
 }
-
-enum NewType { FOOD, MEAL }

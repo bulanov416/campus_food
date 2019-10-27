@@ -49,7 +49,7 @@ class PlaceViewState extends State<PlaceView> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => (FoodOrFriendsCreatorState(_place).build(context)))
+                            builder: (context) => (FoodOrFriendsCreator(_place)))
                     );
                   },
                 )
