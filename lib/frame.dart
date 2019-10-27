@@ -48,7 +48,7 @@ class FrameState extends State<Frame> {
           'Food Friend',
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
-          style: TextStyle(fontFamily: 'Baloo', color: Colors.white),
+          style: TextStyle(fontFamily: 'Baloo', color: Colors.white, fontSize: 25),
         ),
         // Commented out are the buttons to the right of the title
         /*actions: <Widget>[
