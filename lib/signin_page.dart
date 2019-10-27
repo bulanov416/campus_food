@@ -80,7 +80,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: const Text('Test sign in with email and password'),
+            child: const Text('Please sign in with your email and password:'),
             padding: const EdgeInsets.all(16),
             alignment: Alignment.center,
           ),
