@@ -121,7 +121,6 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         onPressed: () {
-
           if (isFoodSelection) {
             // upload newFood to the database
           } else {
@@ -129,11 +128,7 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
             // DONT FORGET TO ADD currentPlace.name TO THE MEETUP OBJECT THAT IS BEING UPLOADED
           }
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FrameState().build(context),
-              ));
+          Navigator.pop(context);
         },
       ),
     );

@@ -56,6 +56,7 @@ class RateFoodState extends State<RateFood> {
         child: Icon(Icons.check),
         onPressed: () {
           // Send rating data (in variable rating) to the database
+          Navigator.pop(context);
         },
       ),
     );
