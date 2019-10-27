@@ -35,8 +35,9 @@ class SignInPageState extends State<SignInPage> {
                 }
                 _signOut();
                 final String uid = user.uid;
+                Auth.refreshFirebaseUser();
                 Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid + ' has successfully signed out.'),
+                  content: Text(user.email + ' has successfully signed out.'),
                 ));
               },
             );

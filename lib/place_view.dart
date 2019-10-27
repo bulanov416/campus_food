@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'food_or_friends_creator.dart';
+import './auth.dart';
 
 class PlaceView extends StatefulWidget {
   final Place _place;
@@ -227,7 +228,14 @@ class PlaceViewState extends State<PlaceView> {
                       IconButton(
                         icon: Icon(Icons.arrow_upward),
                         onPressed: () {
-                          snapshot.data.reference.updateData({'upvotes':FieldValue.increment(1)});
+                          print(Auth.user);
+                          if(Auth.user == null) {
+                            Auth.refreshFirebaseUser();
+                            Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
+                          } else {
+                            snapshot.data.reference.updateData(
+                                {'upvotes': FieldValue.increment(1)});
+                          }
                         },
                       )
                     ],
@@ -243,7 +251,13 @@ class PlaceViewState extends State<PlaceView> {
                       IconButton(
                         icon: Icon(Icons.arrow_downward),
                         onPressed: () {
-                          snapshot.data.reference.updateData({'upvotes':FieldValue.increment(-1)});
+                          if(Auth.user == null) {
+                            Auth.refreshFirebaseUser();
+                            Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
+                          } else {
+                            snapshot.data.reference.updateData(
+                                {'upvotes': FieldValue.increment(-1)});
+                          }
                         },
                       )
                     ],
