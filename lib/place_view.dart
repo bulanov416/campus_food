@@ -47,11 +47,17 @@ class PlaceViewState extends State<PlaceView> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => (FoodOrFriendsCreator(_place)))
-                    );
+                    if(Auth.user != null) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                              (FoodOrFriendsCreator(_place)))
+                      );
+                    } else {
+                      Auth.refreshFirebaseUser();
+                      Auth.SignInAlert(context, "You can't add food or create a meeting without signing in first.");
+                    }
                   },
                 )
               ],
@@ -192,7 +198,7 @@ class PlaceViewState extends State<PlaceView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(food.rating.toString() + "/5.0",
+                    Text(sprintf("%.1f/5.0", [food.rating]),
                         style: TextStyle(fontSize: 25))
                   ],
                 ),
