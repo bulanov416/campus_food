@@ -46,6 +46,9 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
     meetupName,
     meetupDateTime,
     meetupMembers,
+    null,
+    null,
+    null,
     null
   );
 
@@ -158,24 +161,30 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
 
   Widget _uploadButtonMeetup() {
     return StreamBuilder(
-      stream: Firestore.instance.collection('places').document(currentPlace.id).collection("menu").snapshots(),
+      stream: Firestore.instance.collection('meetups').document().snapshots(),
       builder: (context, snapshot) {
         return FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            print("friends button");
-            if (isFoodSelection) {
+            if(Auth.user != null) {
+              snapshot.data.reference.setData({
+                "name": meetupName,
+                "creator": Firestore.instance.collection('users').document(
+                    Auth.user.uid),
+                "dateTime": meetupDateTime,
+                "members": meetupMembers, // TODO ACTUALLY MAKE THE USER ARRAY BASED OFF OF UUIDS WHICH MAKES MORE SENSE
+                "location": currentPlace.reference
+              });
 
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FrameState().build(context),
+                  ));
             } else {
-              // is a Meetup named newMeetup that needs to be uploaded to the database
-              // DONT FORGET TO ADD currentPlace.name TO THE MEETUP OBJECT THAT IS BEING UPLOADED
+              Auth.refreshFirebaseUser();
+              Auth.SignInAlert(context, "You need to sign in before you can create a food item.");
             }
-
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FrameState().build(context),
-                ));
           },
         );
       },

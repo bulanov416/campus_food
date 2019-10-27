@@ -71,9 +71,29 @@ class Food {
 class Meetup {
   String name;
   DateTime dateTime;
-  List<String> members;
-  String location;
+  List<dynamic> members;
+  DocumentReference location;
+  DocumentReference creator;
+  String id;
 
-  Meetup(this.name, this.dateTime, this.members, this.location);
+  final DocumentReference reference;
+
+  Meetup(this.name, this.dateTime, this.members, this.location, this.creator, this.id, this.reference);
+
+  Meetup.fromMap(Map<String, dynamic> map, {this.reference})
+    : assert(map['name'] != null),
+      assert(map['dateTime'] != null),
+      assert(map['members'] != null),
+      assert(map['location'] != null),
+      assert(map['creator'] != null),
+      name = map['name'],
+      dateTime = new DateTime.fromMillisecondsSinceEpoch(map['dateTime'].seconds * 1000),
+      members = map['members'],
+      location = map['location'],
+      creator = map['creator'],
+      id = reference.documentID;
+
+  Meetup.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
 
 }
