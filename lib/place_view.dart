@@ -10,6 +10,7 @@ import './auth.dart';
 class PlaceView extends StatefulWidget {
   final Place _place;
 
+
   PlaceView(this._place);
 
   PlaceViewState createState() => PlaceViewState(_place);
@@ -17,6 +18,7 @@ class PlaceView extends StatefulWidget {
 
 class PlaceViewState extends State<PlaceView> {
   Place _place;
+  int netVote = 0;
 
   PlaceViewState(this._place);
 
@@ -216,6 +218,18 @@ class PlaceViewState extends State<PlaceView> {
         if(!snapshot.hasData) {
           return Text("Rating Unavailable");
         }
+        if(Auth.user != null) {
+          if(snapshot.data["upvoters"].contains(Auth.user.uid)) {
+            netVote = 1;
+          } else if(snapshot.data["downvoters"].contains(Auth.user.uid)) {
+            netVote = -1;
+          } else {
+            netVote = 0;
+          }
+        } else {
+          Auth.refreshFirebaseUser();
+          netVote = 0;
+        }
         return Expanded(
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -227,14 +241,27 @@ class PlaceViewState extends State<PlaceView> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.arrow_upward),
+                        color: netVote > 0 ? Colors.red : null,
                         onPressed: () {
                           print(Auth.user);
                           if(Auth.user == null) {
                             Auth.refreshFirebaseUser();
                             Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
                           } else {
+                            int change = 0;
+                            if(netVote > 0) { // Old vote was for, now taking it away
+                              change = -1;
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                            } else if (netVote < 0){ // Old vote was against, now swinging it
+                              change = 2;
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            } else { // Old vote was neutral, now adding it
+                              change = 1;
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            }
                             snapshot.data.reference.updateData(
-                                {'upvotes': FieldValue.increment(1)});
+                                {'upvotes': FieldValue.increment(change)});
                           }
                         },
                       )
@@ -250,13 +277,26 @@ class PlaceViewState extends State<PlaceView> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.arrow_downward),
+                        color: netVote < 0 ? Colors.red : null,
                         onPressed: () {
                           if(Auth.user == null) {
                             Auth.refreshFirebaseUser();
                             Auth.SignInAlert(context, "You need to be signed in to vote on dining options.");
                           } else {
+                            int change = 0;
+                            if(netVote < 0) { // Old vote was against, now taking it away
+                              change = 1;
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                            } else if (netVote > 0){ // Old vote was for, now swinging it
+                              change = -2;
+                              snapshot.data.reference.updateData({'upvoters':FieldValue.arrayRemove([Auth.user.uid])});
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            } else { // Old vote was neutral, now reducing it
+                              change = -1;
+                              snapshot.data.reference.updateData({'downvoters':FieldValue.arrayUnion([Auth.user.uid])});
+                            }
                             snapshot.data.reference.updateData(
-                                {'upvotes': FieldValue.increment(-1)});
+                                {'upvotes': FieldValue.increment(change)});
                           }
                         },
                       )
