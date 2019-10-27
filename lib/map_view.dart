@@ -28,44 +28,6 @@ class MapViewState extends State<MapView> {
   Map<String, Place> places = {};
   List<Marker> allMarkers = [];
   List<String> addedDiningOptions = [];
-//
-//  void generateMarker(id, place) {
-//    allMarkers.add(Marker(
-//        markerId: MarkerId(place.id),
-//        position: place.location,
-//        infoWindow: InfoWindow(
-//          title: place.name,
-//          snippet: place.type,
-//        ),
-//        icon: BitmapDescriptor.defaultMarker,
-//        onTap: () {
-//          Navigator.push(
-//              context,
-//              MaterialPageRoute(
-//                builder: (context) => (PlaceView(place)),
-//              )
-//          );
-//        }
-//    ));
-//  }
-//
-//  void generateMarkers() {
-//    allMarkers = [];
-//    places.forEach(generateMarker);
-//  }
-//
-//  void addPlaceToList(DocumentSnapshot doc) {
-//    places[doc.documentID] = Place.fromSnapshot(doc);
-//    doc.reference.collection("menu").snapshots()
-//        .listen((data) => data.documents.forEach((doc2) =>
-//        print(doc2["name"])));
-//  }
-//
-//  void onReadDiningOptions(QuerySnapshot data) {
-//    data.documents.forEach(addPlaceToList);
-//
-//    generateMarkers();
-//  }
 
   @override
   void initState() {
