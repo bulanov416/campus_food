@@ -1,3 +1,4 @@
+import 'package:campus_food/rate_food.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'place_data.dart';
@@ -6,6 +7,7 @@ import 'package:sprintf/sprintf.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'food_or_friends_creator.dart';
 import './auth.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 
 class PlaceView extends StatefulWidget {
   final Place _place;
@@ -198,8 +200,17 @@ class PlaceViewState extends State<PlaceView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(sprintf("%.1f/5.0", [food.rating]),
-                        style: TextStyle(fontSize: 25))
+                    FlatButton(
+                      child: Text(sprintf("%.1f/5.0", [food.rating]),
+                          style: TextStyle(fontSize: 25, color: Colors.blueGrey)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => (RateFood(food))),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),

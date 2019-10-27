@@ -249,7 +249,7 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
       ],
     );
   }
-  
+
   Widget createNewMeetup(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -292,7 +292,7 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
             maxLines: 5,
             decoration: InputDecoration(
                 labelText: 'Meetup Participants',
-                hintText: 'Enter user email addresses seperated by commas. For example: bob@joe.com, john@smith.com',
+                hintText: 'Enter user email addresses separated by commas. For example: bob@joe.com, john@smith.com',
                 border: OutlineInputBorder()),
             onChanged: (text) {
               meetupMembers = text.split(", ");

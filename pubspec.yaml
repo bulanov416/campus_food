@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^5.2.5
   sprintf: ^4.0.0
   flutter_datetime_picker: ^1.2.8
+  flutter_rating: ^0.0.2
 
 dev_dependencies:
   flutter_test:

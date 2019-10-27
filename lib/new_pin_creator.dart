@@ -83,11 +83,7 @@ class NewPinCreatorState extends State<NewPinCreator> {
         onPressed: () {
           // UPLOAD newPlace OBJECT TO DATABASE
           // DONT FORGET TO TAKE DATA FROM location AND UPLOAD TO DATABASE WITH OBJECT
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FrameState().build(context),
-              ));
+          Navigator.pop(context);
         },
       ),
     );
