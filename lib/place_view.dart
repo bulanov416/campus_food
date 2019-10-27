@@ -35,6 +35,7 @@ class PlaceViewState extends State<PlaceView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_place.name),
+        title: Text(_place.name, style: TextStyle(fontSize: 25),),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -57,17 +58,18 @@ class PlaceViewState extends State<PlaceView> {
                         children: <Widget>[
                           Expanded(
                               child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(15),
-                                child: Text('Food',
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold)),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(15),
+                                    child: Text('Food',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold)),
+                                  )
+                                ],
                               )
-                            ],
-                          )),
+                          ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,8 +127,17 @@ class PlaceViewState extends State<PlaceView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(_place.menu[i].rating.toString() + "/5",
-                                      style: TextStyle(fontSize: 25))
+                                  FlatButton(
+                                    child: Text(_place.menu[i].rating.toString() + "/5",
+                                    style: TextStyle(fontSize: 25)),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => StarRating().build(context),
+                                          ));
+                                    },
+                                  )
                                 ],
                               ),
                             ),
@@ -242,5 +253,42 @@ class PlaceViewState extends State<PlaceView> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+}
+
+class StarRating extends StatelessWidget {
+  final int value;
+  final IconData filledStar;
+  final IconData unfilledStar;
+  const StarRating({
+    Key key,
+    this.value = 0,
+    this.filledStar,
+    this.unfilledStar,
+  })  : assert(value != null),
+        super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).accentColor;
+    final size = 36.0;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(5, (index) {
+        return IconButton(
+          onPressed: () {
+
+          },
+          color: index < value ? color : null,
+          iconSize: size,
+          icon: Icon(
+            index < value
+                ? filledStar ?? Icons.star
+                : unfilledStar ?? Icons.star_border,
+          ),
+          padding: EdgeInsets.zero,
+          tooltip: "${index + 1} of 5",
+        );
+      }),
+    );
   }
 }
