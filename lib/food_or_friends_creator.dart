@@ -173,7 +173,7 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
                     Auth.user.uid),
                 "dateTime": meetupDateTime,
                 "members": meetupMembers, // TODO ACTUALLY MAKE THE USER ARRAY BASED OFF OF UUIDS WHICH MAKES MORE SENSE
-                "location": currentPlace.reference
+                "location": currentPlace.name // TODO SWITCH BACK TO REFERENCE, BUT I NEED SOLUTION ASAP NOW
               });
 
               Navigator.push(

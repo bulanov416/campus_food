@@ -98,12 +98,19 @@ class SocialViewState extends State<SocialView> {
     return StreamBuilder<QuerySnapshot> (
       stream: Firestore.instance.collection("meetups").where("members", arrayContains: Auth.user.email).snapshots(),
       builder: (context, snapshot) {
-        return Expanded(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: _buildList(context, snapshot.data.documents)
-          ),
-        );
+        if(snapshot.hasData) {
+          return Expanded(
+            child: Container(
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                child: _buildList(context, snapshot.data.documents)
+            ),
+          );
+        } else {
+          return new Container(height: 0, width: 0,);
+        }
       }
     );
   }
@@ -150,30 +157,19 @@ class SocialViewState extends State<SocialView> {
                   ],
                 ),
               ),
-              _getLocationString(context, meetup)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(meetup.location,
+                      style: TextStyle(fontSize: 15))
+                  ],
+                ),
+              )
             ],
           ),
         ),
       ),
-    );
-
-}
-
-
-  Widget _getLocationString(BuildContext context, Meetup meetup) {
-    return StreamBuilder(
-      stream: meetup.location.snapshots(),
-      builder: (context, snapshot) {
-        return Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Text(snapshot.data['name'],
-                  style: TextStyle(fontSize: 15))
-            ],
-          ),
-        );
-      }
     );
   }
 }

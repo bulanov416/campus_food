@@ -72,7 +72,7 @@ class Meetup {
   String name;
   DateTime dateTime;
   List<dynamic> members;
-  DocumentReference location;
+  String location;
   DocumentReference creator;
   String id;
 
