@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'place_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlaceView extends StatefulWidget {
   final Place _place;
@@ -82,44 +83,138 @@ class PlaceViewState extends State<PlaceView> {
                                 )
                               ],
                             ),
-                          ),
-                          Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+
+    return new StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection("places").document(_place.id).collection("menu").snapshots(),
+      builder: (context, snapshot) {
+        if(!snapshot.hasData) {
+          return Text("Loading Data");
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(_place.name),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  // TO-DO: Implement add food feature
+                },
+              )
+            ],
+          ),
+          body: Center(
+            child: Column(
+              children: <Widget>[
+                Flex(
+                  direction: Axis.vertical,
+                  children: [
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                          child: Row(
                             children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(15),
-                                child: Text('Price',
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold)),
-                              )
+                              Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child: Text('Food',
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold)),
+                                      )
+                                    ],
+                                  )),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: Text('Rating',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child: Text('Price',
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold)),
+                                      )
+                                    ],
+                                  )),
                             ],
-                          )),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: _place.menu.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return Card(
-                          child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                          ),
+                        ))
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: _buildList(context, snapshot.data.documents),
+                  ),
+                ),
+                Flex(
+                  direction: Axis.vertical,
+                  children: [
+                    Align(
+                        alignment: Alignment.bottomCenter,
                         child: Row(
                           children: <Widget>[
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(_place.menu[i].name,
-                                      style: TextStyle(fontSize: 25))
-                                ],
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: Icon(Icons.arrow_upward),
+                                            onPressed: () {
+                                              _place.upvotes++;
+                                              setState(() {
+                                                upvoteValue =
+                                                    _place.upvotes.toString();
+                                              });
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Text(upvoteValue,
+                                              style: TextStyle(fontSize: 20)),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: Icon(Icons.arrow_downward),
+                                            onPressed: () {
+                                              _place.upvotes--;
+                                              setState(() {
+                                                upvoteValue =
+                                                    _place.upvotes.toString();
+                                              });
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                             Expanded(
@@ -138,111 +233,88 @@ class PlaceViewState extends State<PlaceView> {
                                     },
                                   )
                                 ],
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(timeUntilExpiration() + 'h left',
+                                      style: TextStyle(fontSize: 20)),
+                                ),
                               ),
                             ),
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(_place.menu[i].cost,
-                                      style: TextStyle(fontSize: 25))
-                                ],
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: IconButton(
+                                      icon: Icon(Icons.map),
+                                      onPressed: () {
+                                        _launchURL(sprintf(
+                                            "http://maps.google.com/?q=%s,%s", [
+                                          _place.location.latitude.toString(),
+                                          _place.location.longitude.toString()
+                                        ]));
+                                      }),
+                                ),
                               ),
-                            )
+                            ),
                           ],
-                        ),
-                      ));
-                    }),
-              ),
-            ),
-            Flex(
-              direction: Axis.vertical,
-              children: [
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: <Widget>[
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_upward),
-                                        onPressed: () {
-                                          _place.upvotes++;
-                                          setState(() {
-                                            upvoteValue =
-                                                _place.upvotes.toString();
-                                          });
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      Text(upvoteValue,
-                                          style: TextStyle(fontSize: 20)),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_downward),
-                                        onPressed: () {
-                                          _place.upvotes--;
-                                          setState(() {
-                                            upvoteValue =
-                                                _place.upvotes.toString();
-                                          });
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(timeUntilExpiration() + 'h left',
-                                  style: TextStyle(fontSize: 20)),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: IconButton(
-                                  icon: Icon(Icons.map),
-                                  onPressed: () {
-                                    _launchURL(sprintf(
-                                        "http://maps.google.com/?q=%s,%s", [
-                                      _place.location.latitude.toString(),
-                                      _place.location.longitude.toString()
-                                    ]));
-                                  }),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ))
+                        ))
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      }
     );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    return ListView (
+        scrollDirection: Axis.vertical,
+        children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    Food food = Food.fromSnapshot(data);
+    return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(food.name,
+                        style: TextStyle(fontSize: 25))
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(food.rating.toString() + "/5.0",
+                        style: TextStyle(fontSize: 25))
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(food.cost,
+                        style: TextStyle(fontSize: 25))
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   _launchURL(String u) async {

@@ -13,6 +13,17 @@ class MapView extends StatefulWidget {
   MapViewState createState() => MapViewState();
 }
 
+Place nave = new Place(
+  "North Ave",
+  "Dining Hall",
+  new DateTime(2019, 10, 27),
+  LatLng(33.771261, -84.391391),
+  25,
+  null,
+  "a01",
+  null
+);
+
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   double zoomVal = 5.0;
