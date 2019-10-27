@@ -231,7 +231,7 @@ class PlaceViewState extends State<PlaceView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(food.rating.toString() + "/5",
+                    Text(food.rating.toString() + "/5.0",
                         style: TextStyle(fontSize: 25))
                   ],
                 ),

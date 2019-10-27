@@ -52,7 +52,7 @@ class Food {
       assert(map['dietary restrictions'] != null),
       assert(map['creator'] != null),
       name = map['name'],
-      rating = map['rating'],
+      rating = map['rating'].toDouble(),
       cost = map['cost'],
       dietaryRestrictions = map['dietary restrictions'],
       creator = map['creator'];
