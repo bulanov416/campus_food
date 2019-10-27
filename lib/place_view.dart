@@ -192,7 +192,7 @@ class PlaceViewState extends State<PlaceView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(food.name,
-                        style: TextStyle(fontSize: 25))
+                        style: TextStyle(fontSize: 20))
                   ],
                 ),
               ),
