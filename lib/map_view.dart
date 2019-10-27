@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:campus_food/new_pin_creator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -204,9 +205,15 @@ class MapViewState extends State<MapView> {
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
           },
-
           markers: Set.from(_buildMarkers(context, snapshot.data.documents)),
           zoomGesturesEnabled: true,
+          onLongPress: (latlng) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => (NewPinCreatorState(latlng).build(context)))
+            );
+          },
         );
       }
     );

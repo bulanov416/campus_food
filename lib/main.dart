@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: Frame(pageTitle: 'Campus Eats?',),
+      home: Frame(pageTitle: 'Food Friend',),
     );
   }
 }
