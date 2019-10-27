@@ -204,11 +204,16 @@ class PlaceViewState extends State<PlaceView> {
                       child: Text(sprintf("%.1f/5.0", [food.rating]),
                           style: TextStyle(fontSize: 25, color: Colors.blueGrey)),
                       onPressed: () {
-                        Navigator.push(
+                        if(Auth.user != null) {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => (RateFood(food))),
-                        );
+                                builder: (context) => (RateFood(food, _place))),
+                          );
+                        } else {
+                          Auth.refreshFirebaseUser();
+                          Auth.SignInAlert(context, "You can't rate a food until you sign in.");
+                        }
                       },
                     )
                   ],

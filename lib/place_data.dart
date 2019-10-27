@@ -42,6 +42,7 @@ class Food {
   String cost;
   List<dynamic> dietaryRestrictions;
   DocumentReference creator;
+  String id;
 
   final DocumentReference reference;
 
@@ -55,14 +56,15 @@ class Food {
       rating = map['rating'].toDouble(),
       cost = map['cost'],
       dietaryRestrictions = map['dietary restrictions'],
-      creator = map['creator'];
+      creator = map['creator'],
+      id = reference.documentID;
 
   Food.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
 
   Food(this.name, this.rating, this.cost, this.dietaryRestrictions,
-      this.creator, this.reference);
+      this.creator, this.id, this.reference);
 
 }
 
