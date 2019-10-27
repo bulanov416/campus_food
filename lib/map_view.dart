@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'place_data.dart';
 import 'place_view.dart';
+import './auth.dart';
 
 class MapView extends StatefulWidget {
   @override
@@ -208,11 +209,16 @@ class MapViewState extends State<MapView> {
           markers: Set.from(_buildMarkers(context, snapshot.data.documents)),
           zoomGesturesEnabled: true,
           onLongPress: (latlng) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => (NewPinCreator(latlng)))
-            );
+            if(Auth.user != null) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) => (NewPinCreator(latlng)))
+              );
+            } else {
+              Auth.refreshFirebaseUser();
+              Auth.SignInAlert(context, "You can't create a new dining location without signing in first.");
+            }
           },
         );
       }
