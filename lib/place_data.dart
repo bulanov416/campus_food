@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Place {
   String name;
   String type;
   DateTime expiration;
   LatLng location;
+  List<Food> menu;
   int upvotes;
   DocumentReference creator;
   String id;
@@ -24,6 +26,7 @@ class Place {
         creator = map['creator'],
         upvotes = map['upvotes'],
         expiration = new DateTime.fromMillisecondsSinceEpoch(map['expiration'].seconds * 1000),
+        menu = [],
         id = reference.documentID;
 
 
@@ -31,7 +34,7 @@ class Place {
     this.fromMap(snapshot.data, reference: snapshot.reference);
 
 
-  Place(this.name, this.type, this.expiration, this.location,
+  Place(this.name, this.type, this.expiration, this.location, this.menu,
       this.upvotes, this.creator, this.id, this.reference);
 
 }
@@ -40,7 +43,7 @@ class Food {
   String name;
   double rating;
   String cost;
-  List<dynamic> dietaryRestrictions;
+  List<String> dietaryRestrictions;
   DocumentReference creator;
 
   final DocumentReference reference;
@@ -49,12 +52,12 @@ class Food {
     : assert(map['name'] != null),
       assert(map['rating'] != null),
       assert(map['cost'] != null),
-      assert(map['dietary restrictions'] != null),
+      assert(map['dietaryRestrictions'] != null),
       assert(map['creator'] != null),
       name = map['name'],
-      rating = map['rating'].toDouble(),
+      rating = map['rating'],
       cost = map['cost'],
-      dietaryRestrictions = map['dietary restrictions'],
+      dietaryRestrictions = map['dietaryRestrictions'],
       creator = map['creator'];
 
   Food.fromSnapshot(DocumentSnapshot snapshot)
