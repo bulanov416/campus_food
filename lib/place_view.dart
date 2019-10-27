@@ -34,6 +34,7 @@ class PlaceViewState extends State<PlaceView> {
     print(_place.menu.length);
     return Scaffold(
       appBar: AppBar(
+        title: Text(_place.name),
         title: Text(_place.name, style: TextStyle(fontSize: 25),),
         actions: <Widget>[
           IconButton(
