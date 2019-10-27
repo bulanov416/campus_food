@@ -16,14 +16,6 @@ Place nave = new Place(
   "Dining Hall",
   new DateTime(2019, 10, 27),
   LatLng(33.771261, -84.391391),
-  [new Food(
-    "Eggs",
-    3.8,
-    "\$15",
-    [],
-    null,
-    null
-  )], 
   25,
   null,
   "a01",
@@ -260,6 +252,7 @@ class MapViewState extends State<MapView> {
 
     Marker _buildMarker(BuildContext context, DocumentSnapshot data) {
       Place place = Place.fromSnapshot(data);
+      places[place.id] = place;
       return Marker(
           markerId: MarkerId(place.id),
           position: place.location,
