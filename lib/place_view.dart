@@ -4,6 +4,7 @@ import 'place_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'food_or_friends_creator.dart';
 
 class PlaceView extends StatefulWidget {
   final Place _place;
@@ -45,7 +46,11 @@ class PlaceViewState extends State<PlaceView> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    // TO-DO: Implement add food feature
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => (FoodOrFriendsCreatorState(_place).build(context)))
+                    );
                   },
                 )
               ],
