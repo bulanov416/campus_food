@@ -36,54 +36,49 @@ class MapViewState extends State<MapView> {
   Map<String, Place> places = {};
   List<Marker> allMarkers = [];
   List<String> addedDiningOptions = [];
-
-  void generateMarker(id, place) {
-    allMarkers.add(Marker(
-        markerId: MarkerId(place.id),
-        position: place.location,
-        infoWindow: InfoWindow(
-          title: place.name,
-          snippet: place.type,
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => (PlaceView(place)),
-              )
-          );
-        }
-    ));
-  }
-
-  void generateMarkers() {
-    print(places);
-    allMarkers = [];
-    places.forEach(generateMarker);
-  }
-
-  void addPlaceToList(DocumentSnapshot doc) {
-    print(doc.documentID);
-    print(doc["menu"]);
-    places[doc.documentID] = Place.fromSnapshot(doc);
-  }
-
-  void onReadDiningOptions(QuerySnapshot data) {
-    data.documents.forEach(addPlaceToList);
-
-    generateMarkers();
-  }
+//
+//  void generateMarker(id, place) {
+//    allMarkers.add(Marker(
+//        markerId: MarkerId(place.id),
+//        position: place.location,
+//        infoWindow: InfoWindow(
+//          title: place.name,
+//          snippet: place.type,
+//        ),
+//        icon: BitmapDescriptor.defaultMarker,
+//        onTap: () {
+//          Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                builder: (context) => (PlaceView(place)),
+//              )
+//          );
+//        }
+//    ));
+//  }
+//
+//  void generateMarkers() {
+//    allMarkers = [];
+//    places.forEach(generateMarker);
+//  }
+//
+//  void addPlaceToList(DocumentSnapshot doc) {
+//    places[doc.documentID] = Place.fromSnapshot(doc);
+//    doc.reference.collection("menu").snapshots()
+//        .listen((data) => data.documents.forEach((doc2) =>
+//        print(doc2["name"])));
+//  }
+//
+//  void onReadDiningOptions(QuerySnapshot data) {
+//    data.documents.forEach(addPlaceToList);
+//
+//    generateMarkers();
+//  }
 
   @override
   void initState() {
     super.initState();
 
-    Firestore.instance
-        .collection('places')
-        .where("timeToExpire", isGreaterThan: DateTime.now().millisecondsSinceEpoch)
-        .snapshots()
-        .listen(onReadDiningOptions);
   }
 
   @override
@@ -231,16 +226,7 @@ class MapViewState extends State<MapView> {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition:  CameraPosition(target: LatLng(33.776817, -84.398879), zoom: 12),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-
-        markers: Set.from(allMarkers),
-        zoomGesturesEnabled: true,
-      ),
+      child: _buildMap(context),
     );
   }
 
@@ -249,5 +235,54 @@ class MapViewState extends State<MapView> {
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(lat, long), zoom: 15,tilt: 50.0,
       bearing: 45.0,)));
   }
+
+  Widget _buildMap(BuildContext context) {
+    return new StreamBuilder(
+      stream: Firestore.instance.collection("places")
+          .where("timeToExpire", isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if(!snapshot.hasData)
+          return new Text("Connecting...");
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition:  CameraPosition(target: LatLng(33.776817, -84.398879), zoom: 12),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+
+          markers: Set.from(_buildMarkers(context, snapshot.data.documents)),
+          zoomGesturesEnabled: true,
+        );
+      }
+    );
+  }
+
+    Marker _buildMarker(BuildContext context, DocumentSnapshot data) {
+      Place place = Place.fromSnapshot(data);
+      return Marker(
+          markerId: MarkerId(place.id),
+          position: place.location,
+          infoWindow: InfoWindow(
+            title: place.name,
+            snippet: place.type,
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => (PlaceView(place)),
+                )
+            );
+          }
+      );
+    }
+
+  List<Marker> _buildMarkers(BuildContext context, List<DocumentSnapshot> snapshot) {
+    return snapshot.map((data) => _buildMarker(context, data)).toList();
+  }
+
+
 
 }

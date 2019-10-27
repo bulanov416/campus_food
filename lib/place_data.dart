@@ -25,7 +25,8 @@ class Place {
         location = LatLng(map['location'].latitude, map['location'].longitude),
         creator = map['creator'],
         upvotes = map['upvotes'],
-        expiration = new DateTime.fromMicrosecondsSinceEpoch(map['expiration'].seconds * 1000),
+        expiration = new DateTime.fromMillisecondsSinceEpoch(map['expiration'].seconds * 1000),
+        menu = [],
         id = reference.documentID;
 
 

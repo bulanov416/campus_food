@@ -25,11 +25,13 @@ class PlaceViewState extends State<PlaceView> {
   }
 
   String timeUntilExpiration() {
-    return(_place.expiration.difference(DateTime.now()).inHours.toString());
+    print(_place.expiration.toString());
+    return (_place.expiration.difference(DateTime.now()).inHours.toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    print(_place.menu.length);
     return Scaffold(
       appBar: AppBar(
         title: Text(_place.name),
@@ -164,7 +166,8 @@ class PlaceViewState extends State<PlaceView> {
                                         onPressed: () {
                                           _place.upvotes++;
                                           setState(() {
-                                            upvoteValue = _place.upvotes.toString();
+                                            upvoteValue =
+                                                _place.upvotes.toString();
                                           });
                                         },
                                       )
@@ -172,7 +175,8 @@ class PlaceViewState extends State<PlaceView> {
                                   ),
                                   Column(
                                     children: <Widget>[
-                                      Text(upvoteValue, style: TextStyle(fontSize: 20)),
+                                      Text(upvoteValue,
+                                          style: TextStyle(fontSize: 20)),
                                     ],
                                   ),
                                   Column(
@@ -182,7 +186,8 @@ class PlaceViewState extends State<PlaceView> {
                                         onPressed: () {
                                           _place.upvotes--;
                                           setState(() {
-                                            upvoteValue = _place.upvotes.toString();
+                                            upvoteValue =
+                                                _place.upvotes.toString();
                                           });
                                         },
                                       )
@@ -198,7 +203,8 @@ class PlaceViewState extends State<PlaceView> {
                             padding: EdgeInsets.all(20),
                             child: Align(
                               alignment: Alignment.center,
-                              child: Text(timeUntilExpiration() + 'h left', style: TextStyle(fontSize: 20)),
+                              child: Text(timeUntilExpiration() + 'h left',
+                                  style: TextStyle(fontSize: 20)),
                             ),
                           ),
                         ),
@@ -208,11 +214,14 @@ class PlaceViewState extends State<PlaceView> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: IconButton(
-                                icon: Icon(Icons.map),
-                                onPressed: () {
-                                  _launchURL(sprintf("http://maps.google.com/?q=%s,%s", [_place.location.latitude.toString(), _place.location.longitude.toString()]));
-                                }
-                              ),
+                                  icon: Icon(Icons.map),
+                                  onPressed: () {
+                                    _launchURL(sprintf(
+                                        "http://maps.google.com/?q=%s,%s", [
+                                      _place.location.latitude.toString(),
+                                      _place.location.longitude.toString()
+                                    ]));
+                                  }),
                             ),
                           ),
                         ),
@@ -234,5 +243,4 @@ class PlaceViewState extends State<PlaceView> {
       throw 'Could not launch $url';
     }
   }
-
 }
