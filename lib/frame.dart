@@ -89,14 +89,16 @@ class FrameState extends State<Frame> {
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
         fixedColor: Colors.blue,
-        onTap: _onItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+
   }
 }

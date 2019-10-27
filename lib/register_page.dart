@@ -44,6 +44,7 @@ class RegisterPageState extends State<RegisterPage> {
             TextFormField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'Please enter some text';

@@ -104,7 +104,7 @@ class NewPinCreatorState extends State<NewPinCreator> {
                 "upvoters": [],
                 "timeToExpire": expire.millisecondsSinceEpoch,
                 "expiration": expire,
-                "type": "Free Food",
+                "type": "",
                 "upvotes": 0,
                 "location": new GeoPoint(location.latitude, location.longitude),
                 "createdAt": now

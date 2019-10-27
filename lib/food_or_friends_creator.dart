@@ -6,6 +6,7 @@ import 'place_data.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './auth.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 
 class FoodOrFriendsCreator extends StatefulWidget {
   Place currentPlace;
@@ -24,7 +25,7 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
   String dropdownValue = '';
 
   static String foodName;
-  static double foodRating = 5.0;
+  static double foodRating = 0;
   static String foodCost;
   static List<dynamic> foodDietaryRestrictions;
 
@@ -147,8 +148,9 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FrameState().build(context),
-                  ));
+                      builder: (context) =>
+                      (Frame()))
+              );
             } else {
               Auth.refreshFirebaseUser();
               Auth.SignInAlert(context, "You need to sign in before you can create a food item.");
@@ -166,6 +168,7 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
         return FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
+            meetupMembers.add(Auth.user.email);
             if(Auth.user != null) {
               snapshot.data.reference.setData({
                 "name": meetupName,
@@ -179,8 +182,9 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FrameState().build(context),
-                  ));
+                      builder: (context) =>
+                      (Frame()))
+              );
             } else {
               Auth.refreshFirebaseUser();
               Auth.SignInAlert(context, "You need to sign in before you can create a food item.");
@@ -192,6 +196,8 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
   }
 
   Widget createNewFood(BuildContext context) {
+
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -224,13 +230,14 @@ class FoodOrFriendsCreatorState extends State<FoodOrFriendsCreator> {
                       width: MediaQuery.of(context).size.width*0.5,
                       child: Align(
                         alignment: Alignment.center,
-                        child: Slider(
-                          min: 0.0,
-                          max: 5.0,
-                          onChanged: (double newRating) {
-                            setState(() => foodRating = newRating);
-                          },
-                          value: foodRating,
+                        child: new StarRating(
+                          size: 25.0,
+                          rating: foodRating,
+                          starCount: 5,
+                          onRatingChanged: (rating ) => setState(() {
+                            foodRating = rating;
+                          }
+                          ),
                         ),
                       )
                     ),
