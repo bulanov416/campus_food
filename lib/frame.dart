@@ -10,10 +10,10 @@ class Frame extends StatefulWidget {
   Frame({Key key, this.pageTitle}) : super(key: key);
 
   @override
-  FrameState createState() => FrameState();
+  _FrameState createState() => _FrameState();
 }
 
-class FrameState extends State<Frame> {
+class _FrameState extends State<Frame> {
   int _selectedIndex = 0;
 
   @override
@@ -31,12 +31,34 @@ class FrameState extends State<Frame> {
         backgroundColor: Color(0xffbdd8ff),
         centerTitle: true,
         elevation: 0,
+        // Commented out is the button to the left of the title
+        /*leading: IconButton(
+          onPressed: () {},
+          iconSize: 21,
+          icon: Icon(Icons.map),
+        ),*/
         title: Text(
           'Campus Eats',
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
-          style: TextStyle(fontSize: 25),),
+          style: TextStyle(fontFamily: 'OpenSans'),
         ),
+        // Commented out are the buttons to the right of the title
+        /*actions: <Widget>[
+          IconButton(
+            padding: EdgeInsets.all(0),
+            onPressed: () {},
+            iconSize: 21,
+            icon: Icon(Icons.zoom_in),
+          ),
+          IconButton(
+            padding: EdgeInsets.all(0),
+            onPressed: () {},
+            iconSize: 21,
+            icon: Icon(Icons.alarm),
+          ),
+        ],*/
+      ),
       body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

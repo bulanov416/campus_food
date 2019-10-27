@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:campus_food/creator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +11,69 @@ class MapView extends StatefulWidget {
   MapViewState createState() => MapViewState();
 }
 
+Place nave = new Place(
+  "North Ave",
+  "Dining Hall",
+  new DateTime(2019, 10, 27),
+  LatLng(33.771261, -84.391391),
+  [new Food(
+    "Eggs",
+    3.8,
+    "\$15",
+    [],
+    null,
+    null
+  )], 
+  25,
+  null,
+  "a01",
+  null
+);
+
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   double zoomVal = 5.0;
   Map<String, Place> places = {};
   List<Marker> allMarkers = [];
   List<String> addedDiningOptions = [];
+//
+//  void generateMarker(id, place) {
+//    allMarkers.add(Marker(
+//        markerId: MarkerId(place.id),
+//        position: place.location,
+//        infoWindow: InfoWindow(
+//          title: place.name,
+//          snippet: place.type,
+//        ),
+//        icon: BitmapDescriptor.defaultMarker,
+//        onTap: () {
+//          Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                builder: (context) => (PlaceView(place)),
+//              )
+//          );
+//        }
+//    ));
+//  }
+//
+//  void generateMarkers() {
+//    allMarkers = [];
+//    places.forEach(generateMarker);
+//  }
+//
+//  void addPlaceToList(DocumentSnapshot doc) {
+//    places[doc.documentID] = Place.fromSnapshot(doc);
+//    doc.reference.collection("menu").snapshots()
+//        .listen((data) => data.documents.forEach((doc2) =>
+//        print(doc2["name"])));
+//  }
+//
+//  void onReadDiningOptions(QuerySnapshot data) {
+//    data.documents.forEach(addPlaceToList);
+//
+//    generateMarkers();
+//  }
 
   @override
   void initState() {
@@ -73,6 +128,100 @@ class MapViewState extends State<MapView> {
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(33.777281, -84.398600), zoom: zoomVal)));
   }
 
+  Widget myDetailsContainer1(String restaurantName) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Container(
+              child: Text(restaurantName,
+                style: TextStyle(
+                    color: Color(0xff6200ee),
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold),
+              )),
+        ),
+        SizedBox(height:5.0),
+        Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                    child: Text(
+                      "4.1",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+                      ),
+                    )),
+                Container(
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 15.0,
+                  ),
+                ),
+                Container(
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 15.0,
+                  ),
+                ),
+                Container(
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 15.0,
+                  ),
+                ),
+                Container(
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 15.0,
+                  ),
+                ),
+                Container(
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 15.0,
+                  ),
+                ),
+                Container(
+                    child: Text(
+                      "(946)",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+                      ),
+                    )),
+              ],
+            )),
+        SizedBox(height:5.0),
+        Container(
+            child: Text(
+              "American \u00B7 \u0024\u0024 \u00B7 1.6 mi",
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 18.0,
+              ),
+            )),
+        SizedBox(height:5.0),
+        Container(
+            child: Text(
+              "Closed \u00B7 Opens 17:00 Thu",
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold),
+            )),
+      ],
+    );
+  }
+
   Widget _buildGoogleMap(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -104,39 +253,31 @@ class MapViewState extends State<MapView> {
 
           markers: Set.from(_buildMarkers(context, snapshot.data.documents)),
           zoomGesturesEnabled: true,
-          onLongPress: (latlong) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => (Creator(latlong)),
-                )
-            );
-          },
         );
       }
     );
   }
 
-  Marker _buildMarker(BuildContext context, DocumentSnapshot data) {
-    Place place = Place.fromSnapshot(data);
-    return Marker(
-        markerId: MarkerId(place.id),
-        position: place.location,
-        infoWindow: InfoWindow(
-          title: place.name,
-          snippet: place.type,
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => (PlaceView(place)),
-              )
-          );
-        }
-    );
-  }
+    Marker _buildMarker(BuildContext context, DocumentSnapshot data) {
+      Place place = Place.fromSnapshot(data);
+      return Marker(
+          markerId: MarkerId(place.id),
+          position: place.location,
+          infoWindow: InfoWindow(
+            title: place.name,
+            snippet: place.type,
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => (PlaceView(place)),
+                )
+            );
+          }
+      );
+    }
 
   List<Marker> _buildMarkers(BuildContext context, List<DocumentSnapshot> snapshot) {
     return snapshot.map((data) => _buildMarker(context, data)).toList();
