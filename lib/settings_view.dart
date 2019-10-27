@@ -14,15 +14,14 @@ class SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Settings"),
-      ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
             child: RaisedButton(
-              child: const Text('Test registration'),
+              color: Colors.blueGrey[100],
+              child: const Text('Sign Up'),
               onPressed: () => _pushPage(context, RegisterPage()),
             ),
             padding: const EdgeInsets.all(16),
@@ -30,7 +29,8 @@ class SettingsViewState extends State<SettingsView> {
           ),
           Container(
             child: RaisedButton(
-              child: const Text('Test SignIn/SignOut'),
+              color: Colors.blueGrey[100],
+              child: const Text('Log In/Log Out'),
               onPressed: () => _pushPage(context, SignInPage()),
             ),
             padding: const EdgeInsets.all(16),

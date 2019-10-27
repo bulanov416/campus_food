@@ -28,7 +28,14 @@ class _FrameState extends State<Frame> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xffbdd8ff),
+//        actions: <Widget>[
+//          new IconButton(icon: new Icon(Icons.fastfood),
+//          ),
+//        ],
+//        iconTheme: IconThemeData(
+//          color: Colors.white,
+//        ),
+        backgroundColor: Color(0xff100869),
         centerTitle: true,
         elevation: 0,
         // Commented out is the button to the left of the title
@@ -38,10 +45,10 @@ class _FrameState extends State<Frame> {
           icon: Icon(Icons.map),
         ),*/
         title: Text(
-          'Campus Eats',
+          'Food Friend',
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
-          style: TextStyle(fontFamily: 'OpenSans'),
+          style: TextStyle(fontFamily: 'Baloo', color: Colors.white),
         ),
         // Commented out are the buttons to the right of the title
         /*actions: <Widget>[
