@@ -252,6 +252,7 @@ class MapViewState extends State<MapView> {
 
     Marker _buildMarker(BuildContext context, DocumentSnapshot data) {
       Place place = Place.fromSnapshot(data);
+      places[place.id] = place;
       return Marker(
           markerId: MarkerId(place.id),
           position: place.location,
